@@ -38,26 +38,30 @@ plt.show()
 # Visualization: Distribution of new cases by date
 # This helps to understand how new cases changed over dates
 plt.figure(figsize=(8, 6))
-sns.boxplot(x='continent', y='new_cases_smoothed_per_million', data=df)
-plt.title('new_cases_smoothed_per_million by continent')
+sns.boxplot(x='continent', y='total_cases', data=df)
+plt.title('total_cases by continent')
 plt.show()
 
 # Visualization: Distribution of total death by countries
 # Aggregate data to get the total deaths per million for each continent
-continent_data = df.groupby('continent')['total_deaths_per_million'].sum().reset_index()
+continent_data = df.groupby('continent')['total_deaths'].sum().reset_index()
 
 # Plot the aggregated data
 plt.figure(figsize=(8, 6))
-plt.bar(continent_data['continent'], continent_data['total_deaths_per_million'])
-plt.title("Bar Plot of Total Deaths per Million by Continent")
+plt.bar(continent_data['continent'], continent_data['total_deaths'])
+plt.title("Bar Plot of Total Deaths by Continent")
 plt.xlabel("Continent")
-plt.ylabel("Total Deaths per Million")
+plt.ylabel("Total Deaths")
 plt.xticks(rotation=90)
 plt.show()
 
-plt.figure(figsize=(8, 6))
+
+plt.figure(figsize=(10, 6))
 plt.plot(df['date'], df['new_cases_smoothed'])  # Pass x and y as series, not as keyword arguments
 plt.title("Line Plot of new cases")
 plt.xlabel("Date")
 plt.ylabel("New Cases Smoothed")
 plt.show()
+
+
+
