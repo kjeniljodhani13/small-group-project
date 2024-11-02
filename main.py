@@ -11,7 +11,7 @@ import os
 
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
-df = pd.read_csv('covid_data.csv')
+df = pd.read_csv('covid_data_total.csv')
 
 # 1. Data Exploration
 # Display the first few rows of the dataset to get an overview
@@ -22,6 +22,10 @@ print("\nSummary statistics:\n", df.describe())
 
 # Check for missing values in the dataset
 print("\nMissing values:\n", df.isnull().sum())
+
+# Convert 'date' into datetime type
+df['date'] = pd.to_datetime(df['date'], format='%m/%d/%Y')
+
 
 
 
@@ -55,7 +59,7 @@ plt.xticks(rotation=90)
 plt.show()
 
 # 5. Visualization of Line plot: Distribution of new cases by date
-plt.figure(figsize=(10, 6))
+plt.figure(figsize=(8, 6))
 plt.plot(df['date'], df['new_cases_smoothed']) # Pass x and y as series, not as keyword arguments
 plt.title("Line Plot of new cases")
 plt.xlabel("Date")
@@ -63,18 +67,28 @@ plt.ylabel("New Cases Smoothed")
 plt.show()
 
 
-# 6. Visualization of pair plot: Distribution of cases by continent
-
-# Select relevant columns for the pair plot and handle any missing values
-covid_data = df[['new_cases', 'new_deaths', 'total_cases', 'total_deaths', 'continent']].dropna()
-
-# Create the pair plot with hue and set the plot size
-sns.pairplot(covid_data, hue="continent", height=2.5)
-
-# Show the plot
+plt.figure(figsize=(8, 6))
+plt.plot(df['total_cases'], df['total_deaths'])
+plt.title("Line Plot of relationship between total cases and total deaths")
+plt.xlabel("total_cases")
+plt.ylabel("total_deaths")
 plt.show()
 
 
+# 6. Visualization of pair plot: Distribution of cases by continent
+# Select relevant numerical columns and the categorical 'continent' column for hue
+covid_data = df[['total_cases', 'new_cases_smoothed', 'total_deaths',  'total_vaccinations', 'continent']].dropna()
+
+# Create the pair plot with 'continent' as the hue
+sns.pairplot(covid_data, hue='continent', height=2.5)
+
+plt.show()
+
+
+# conclusion:
+# There is a positive correlation between total deaths and total cases.
+# Europe has the largest total deaths, followed by North America and Asia.
+# December 2022 and January 2023 is the peak of the global coronavirus outbreak.
 
 
 
