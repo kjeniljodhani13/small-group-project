@@ -38,8 +38,8 @@ plt.show()
 # Visualization: Distribution of new cases by date
 # This helps to understand how new cases changed over dates
 plt.figure(figsize=(8, 6))
-sns.boxplot(x='date', y='new_cases_smoothed', data=df)
-plt.title('new_cases_smoothed by date')
+sns.boxplot(x='continent', y='new_cases_smoothed_per_million', data=df)
+plt.title('new_cases_smoothed_per_million by continent')
 plt.show()
 
 # Visualization: Distribution of total death by countries
