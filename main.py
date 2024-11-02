@@ -24,8 +24,8 @@ print("\nSummary statistics:\n", df.describe())
 print("\nMissing values:\n", df.isnull().sum())
 
 
-# 2. Data Visualization: Correlation heatmap
-# Visualize the correlation between numerical variables using a heatmap
+
+# 2. Visualize of heatmap: the correlation between numerical variables
 plt.figure(figsize=(10, 8))
 numeric_df = df.select_dtypes(include=[np.number])
 corr = numeric_df.corr()
@@ -35,18 +35,17 @@ plt.show()
 
 
 
-# Visualization: Distribution of new cases by date
+# 3. Visualization of box plot: Distribution of total cases by continent
 # This helps to understand how new cases changed over dates
 plt.figure(figsize=(8, 6))
 sns.boxplot(x='continent', y='total_cases', data=df)
 plt.title('total_cases by continent')
 plt.show()
 
-# Visualization: Distribution of total death by countries
+
+# 4. Visualization of bar plot: Distribution of total death by continent
 # Aggregate data to get the total deaths per million for each continent
 continent_data = df.groupby('continent')['total_deaths'].sum().reset_index()
-
-# Plot the aggregated data
 plt.figure(figsize=(8, 6))
 plt.bar(continent_data['continent'], continent_data['total_deaths'])
 plt.title("Bar Plot of Total Deaths by Continent")
@@ -55,13 +54,30 @@ plt.ylabel("Total Deaths")
 plt.xticks(rotation=90)
 plt.show()
 
-
+# 5. Visualization of Line plot: Distribution of new cases by date
 plt.figure(figsize=(10, 6))
-plt.plot(df['date'], df['new_cases_smoothed'])  # Pass x and y as series, not as keyword arguments
+plt.plot(df['date'], df['new_cases_smoothed']) # Pass x and y as series, not as keyword arguments
 plt.title("Line Plot of new cases")
 plt.xlabel("Date")
 plt.ylabel("New Cases Smoothed")
 plt.show()
+
+
+# 6. Visualization of pair plot: Distribution of cases by continent
+
+# Select relevant columns for the pair plot and handle any missing values
+covid_data = df[['new_cases', 'new_deaths', 'total_cases', 'total_deaths', 'continent']].dropna()
+
+# Create the pair plot with hue and set the plot size
+sns.pairplot(covid_data, hue="continent", height=2.5)
+
+# Show the plot
+plt.show()
+
+
+
+
+
 
 
 
