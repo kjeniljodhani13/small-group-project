@@ -9,8 +9,7 @@ from sklearn.metrics import classification_report, confusion_matrix
 import seaborn as sns
 import os
 
-# Load the dataset
-# Make sure the dataset is in the same directory or provide the full path to the dataset
+
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 df = pd.read_csv('covid_data.csv')
 
@@ -24,6 +23,7 @@ print("\nSummary statistics:\n", df.describe())
 # Check for missing values in the dataset
 print("\nMissing values:\n", df.isnull().sum())
 
+
 # 2. Data Visualization: Correlation heatmap
 # Visualize the correlation between numerical variables using a heatmap
 plt.figure(figsize=(10, 8))
@@ -33,48 +33,31 @@ sns.heatmap(corr, annot=True, cmap='coolwarm', linewidths=0.5)
 plt.title('Correlation Heatmap')
 plt.show()
 
-# Visualization: Distribution of App Usage Time based on User Behavior Class
-# This helps to understand how app usage varies between different user behavior classes
+
+
+# Visualization: Distribution of new cases by date
+# This helps to understand how new cases changed over dates
 plt.figure(figsize=(8, 6))
-sns.boxplot(x='User Behavior Class', y='App Usage Time (min/day)', data=df)
-plt.title('App Usage Time Distribution by User Behavior Class')
+sns.boxplot(x='date', y='new_cases_smoothed', data=df)
+plt.title('new_cases_smoothed by date')
 plt.show()
 
-# 3. Data Preprocessing
-# Convert categorical columns (Operating System, Gender) into numeric values using Label Encoding
-le = LabelEncoder()
-df['Operating System'] = le.fit_transform(df['Operating System'])
-df['Gender'] = le.fit_transform(df['Gender'])
+# Visualization: Distribution of total death by countries
+# Aggregate data to get the total deaths per million for each continent
+continent_data = df.groupby('continent')['total_deaths_per_million'].sum().reset_index()
 
-# Define features (X) and target (y)
-# Features will include all columns except 'User ID', 'Device Model', and 'User Behavior Class'
-X = df.drop(columns=['User ID', 'Device Model', 'User Behavior Class'])
-y = df['User Behavior Class']
+# Plot the aggregated data
+plt.figure(figsize=(8, 6))
+plt.bar(continent_data['continent'], continent_data['total_deaths_per_million'])
+plt.title("Bar Plot of Total Deaths per Million by Continent")
+plt.xlabel("Continent")
+plt.ylabel("Total Deaths per Million")
+plt.xticks(rotation=90)
+plt.show()
 
-# Split the data into training and test sets (70% train, 30% test)
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
-
-# Feature scaling: Standardize features by removing the mean and scaling to unit variance
-scaler = StandardScaler()
-X_train_scaled = scaler.fit_transform(X_train)
-X_test_scaled = scaler.transform(X_test)
-
-# 4. Machine Learning: Logistic Regression Model
-# Create and train the Logistic Regression model on the training data
-model = LogisticRegression(max_iter=1000)
-model.fit(X_train_scaled, y_train)
-
-# Make predictions on the test set
-y_pred = model.predict(X_test)
-
-# Evaluation of the model's performance using confusion matrix and classification report
-print("\nConfusion Matrix:\n", confusion_matrix(y_test, y_pred))
-print("\nClassification Report:\n", classification_report(y_test, y_pred))
-
-# Visualize Confusion Matrix using a heatmap
-plt.figure(figsize=(6, 4))
-sns.heatmap(confusion_matrix(y_test, y_pred), annot=True, fmt='d', cmap='Blues')
-plt.title('Confusion Matrix')
-plt.xlabel('Predicted')
-plt.ylabel('Actual')
+plt.figure(figsize=(8, 6))
+plt.plot(df['date'], df['new_cases_smoothed'])  # Pass x and y as series, not as keyword arguments
+plt.title("Line Plot of new cases")
+plt.xlabel("Date")
+plt.ylabel("New Cases Smoothed")
 plt.show()
