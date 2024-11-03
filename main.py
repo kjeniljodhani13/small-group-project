@@ -68,10 +68,10 @@ plt.show()
 
 
 plt.figure(figsize=(8, 6))
-plt.plot(df['total_cases'], df['total_deaths'])
-plt.title("Line Plot of relationship between total cases and total deaths")
-plt.xlabel("total_cases")
-plt.ylabel("total_deaths")
+plt.plot(df['date'], df['people_fully_vaccinated'])
+plt.title("Line Plot of people fully vaccinated by date")
+plt.xlabel("date")
+plt.ylabel("people fully vaccinated")
 plt.show()
 
 
@@ -81,7 +81,6 @@ covid_data = df[['total_cases', 'new_cases_smoothed', 'total_deaths',  'total_va
 
 # Create the pair plot with 'continent' as the hue
 sns.pairplot(covid_data, hue='continent', height=2.5)
-
 plt.show()
 
 
